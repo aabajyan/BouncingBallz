@@ -26,7 +26,6 @@ export class Ball extends AbstractObject {
       this.yDirection = -this.yDirection
     }
 
-    this.game.clear('black')
     this.game.circle(this.x, this.y, BALL_RADIUS, 'white')
   }
 }

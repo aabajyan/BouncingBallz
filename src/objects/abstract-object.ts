@@ -5,8 +5,8 @@ export abstract class AbstractObject {
 
   constructor(protected readonly game: Game) {}
 
-  abstract onInit(..._args: any[]): void
-  abstract onUpdate(): void
+  onInit(..._args: any[]): void {}
+  onUpdate(): void {}
 
   destroy(): void {
     this._shouldDestroy = true
