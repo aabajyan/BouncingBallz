@@ -1,6 +1,6 @@
 import { AbstractObject } from './abstract-object'
 
-export class Temp extends AbstractObject {
+export class Background extends AbstractObject {
   onUpdate(): void {
     this.game.clear('black')
   }

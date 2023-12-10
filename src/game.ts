@@ -1,12 +1,14 @@
 import { AbstractObject } from './objects/abstract-object'
 
+const DELTA_TIME = 1 / 60
+
 export class Game {
   public readonly width: number
   public readonly height: number
   public readonly canvas: HTMLCanvasElement
   public readonly ctx: CanvasRenderingContext2D
 
-  private objects: AbstractObject[] = []
+  public objects: AbstractObject[] = []
   private isRunning = false
 
   constructor(canvas: string) {
@@ -31,6 +33,23 @@ export class Game {
     this.ctx.fillRect(0, 0, this.width, this.height)
   }
 
+  line(
+    x1: number,
+    y1: number,
+    x2: number,
+    y2: number,
+    color: string,
+    stroke: number = 1,
+  ): void {
+    this.ctx.beginPath()
+    this.ctx.moveTo(x1, y1)
+    this.ctx.lineTo(x2, y2)
+    this.ctx.strokeStyle = color
+    this.ctx.lineWidth = stroke
+    this.ctx.stroke()
+    this.ctx.closePath()
+  }
+
   circle(x: number, y: number, radius: number, color: string): void {
     this.ctx.beginPath()
     this.ctx.arc(x, y, radius, 0, 2 * Math.PI)
@@ -51,18 +70,18 @@ export class Game {
   }
 
   private loop() {
-    if (this.isRunning) {
-      requestAnimationFrame(this.loop.bind(this))
-    }
-
     this.objects = this.objects.filter((object) => {
       if (object.shouldDestroy) {
         return false
       }
 
-      object.onUpdate()
+      object.onUpdate(DELTA_TIME)
       return true
     })
+
+    if (this.isRunning) {
+      requestAnimationFrame(this.loop.bind(this))
+    }
   }
 
   stop(): void {
