@@ -26,6 +26,7 @@ export class Ball extends AbstractObject {
   private rotation = 0
   private rotationDirection = 0
   private image = ''
+  private timer = 0
 
   onInit(options: BallOptions) {
     this.position.x = options.x
@@ -35,8 +36,6 @@ export class Ball extends AbstractObject {
     this.restitution = -options.restitution
     this.area = (Math.PI * this.radius ** 2) / 10000
     this.image = options.image
-
-    setTimeout(this.destroy.bind(this), 100000)
   }
 
   isHittingWall(): boolean {
@@ -123,6 +122,12 @@ export class Ball extends AbstractObject {
     }
   }
   onUpdate(deltaTime: number): void {
+    ++this.timer
+    if (this.timer > 10000) {
+      this.destroy()
+      return
+    }
+
     this.handleWallCollision()
     this.handleCircleCollisions()
 
