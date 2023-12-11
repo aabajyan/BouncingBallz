@@ -1,3 +1,4 @@
+import { AssetLoader } from './assets'
 import { AbstractObject } from './objects/abstract-object'
 
 const DELTA_TIME = 1 / 60
@@ -7,6 +8,7 @@ export class Game {
   public readonly height: number
   public readonly canvas: HTMLCanvasElement
   public readonly ctx: CanvasRenderingContext2D
+  public readonly assets: AssetLoader = new AssetLoader()
 
   public objects: AbstractObject[] = []
   private objectsToAdd: AbstractObject[] = []
@@ -29,6 +31,7 @@ export class Game {
     this.height = el.height
     this.canvas = el
     this.ctx = ctx
+    this.ctx.imageSmoothingEnabled = false
   }
 
   clear(color: string = 'black'): void {
@@ -98,12 +101,25 @@ export class Game {
     }
   }
 
+  private assetLoadLoop() {
+    if (this.assets.isReady) {
+      this.isRunning = true
+      this.loop()
+      return
+    }
+
+    setTimeout(this.assetLoadLoop.bind(this), 100)
+  }
+
   stop(): void {
     this.isRunning = false
   }
 
   run(): void {
-    this.isRunning = true
-    this.loop()
+    if (this.isRunning) {
+      return
+    }
+
+    this.assetLoadLoop()
   }
 }

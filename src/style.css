@@ -10,7 +10,8 @@
   left: 50%;
   transform: translate(-50%, -50%);
   border: #fff solid 2px;
-  
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 body {

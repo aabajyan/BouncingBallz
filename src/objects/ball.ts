@@ -13,7 +13,7 @@ export interface BallOptions {
   radius: number
   restitution: number
   mass: number
-  color: string
+  image: string
 }
 
 export class Ball extends AbstractObject {
@@ -23,7 +23,9 @@ export class Ball extends AbstractObject {
   private mass = 0
   private restitution = 0
   private area = 0
-  private color = 'white'
+  private rotation = 0
+  private rotationDirection = 0
+  private image = ''
 
   onInit(options: BallOptions) {
     this.position.x = options.x
@@ -32,7 +34,7 @@ export class Ball extends AbstractObject {
     this.radius = options.radius
     this.restitution = -options.restitution
     this.area = (Math.PI * this.radius ** 2) / 10000
-    this.color = options.color
+    this.image = options.image
 
     setTimeout(this.destroy.bind(this), 100000)
   }
@@ -94,8 +96,10 @@ export class Ball extends AbstractObject {
       // Update velocity
       this.velocity.x -= p * this.mass * nx
       this.velocity.y -= p * this.mass * ny
+      this.rotationDirection = Math.sign(this.velocity.x)
       other.velocity.x += p * other.mass * nx
       other.velocity.y += p * other.mass * ny
+      other.rotationDirection = Math.sign(other.velocity.x)
     }
   }
 
@@ -103,9 +107,11 @@ export class Ball extends AbstractObject {
     if (this.position.x > this.game.width - this.radius) {
       this.velocity.x *= this.restitution
       this.position.x = this.game.width - this.radius
+      this.rotationDirection = -Math.sign(this.velocity.x)
     } else if (this.position.x < this.radius) {
       this.velocity.x *= this.restitution
       this.position.x = this.radius
+      this.rotationDirection = Math.sign(this.velocity.x)
     }
 
     if (this.position.y > this.game.height - this.radius) {
@@ -141,10 +147,21 @@ export class Ball extends AbstractObject {
     this.velocity.y += ay * deltaTime
     this.position.x += this.velocity.x * deltaTime * 100
     this.position.y += this.velocity.y * deltaTime * 100
+    this.rotation += this.rotationDirection * Math.abs(this.velocity.x) * 20
 
     // add friction to ball velocity x
     this.velocity.x -= this.velocity.x * BALL_FRICTION
 
-    this.game.circle(this.position.x, this.position.y, this.radius, this.color)
+    this.game.ctx.save()
+    this.game.ctx.translate(this.position.x, this.position.y)
+    this.game.ctx.rotate((this.rotation * Math.PI) / 180)
+    this.game.ctx.drawImage(
+      this.game.assets.get(this.image)!,
+      -this.radius,
+      -this.radius,
+      this.radius * 2,
+      this.radius * 2,
+    )
+    this.game.ctx.restore()
   }
 }
