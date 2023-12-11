@@ -16,6 +16,10 @@ game.add(Background)
 game.run()
 
 game.canvas.addEventListener('mouseup', (e) => {
+  if (!game.isRunning) {
+    return
+  }
+
   const rect = game.canvas.getBoundingClientRect()
   const radius = Math.random() * 20 + 10
 
@@ -27,4 +31,24 @@ game.canvas.addEventListener('mouseup', (e) => {
     mass: radius,
     image: images[Math.floor(Math.random() * images.length)],
   })
+})
+
+document.querySelector('#play')!.addEventListener('click', () => {
+  game.run()
+})
+
+document.querySelector('#stop')!.addEventListener('click', () => {
+  game.stop()
+})
+
+document.querySelector('#clear')!.addEventListener('click', () => {
+  if (!game.isRunning) {
+    return
+  }
+
+  for (const obj of game.objects) {
+    if (obj instanceof Ball) {
+      game.destroy(obj)
+    }
+  }
 })

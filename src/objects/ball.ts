@@ -152,7 +152,7 @@ export class Ball extends AbstractObject {
     this.velocity.y += ay * deltaTime
     this.position.x += this.velocity.x * deltaTime * 100
     this.position.y += this.velocity.y * deltaTime * 100
-    this.rotation += this.rotationDirection * Math.abs(this.velocity.x) * 20
+    this.rotation += this.rotationDirection * Math.abs(this.velocity.x) * 10
 
     // add friction to ball velocity x
     this.velocity.x -= this.velocity.x * BALL_FRICTION

@@ -14,7 +14,7 @@ export class Game {
   private objectsToAdd: AbstractObject[] = []
   private objectsToRemove: AbstractObject[] = []
 
-  private isRunning = false
+  private _isRunning = false
 
   constructor(canvas: string) {
     const el = document.querySelector(canvas)
@@ -96,14 +96,14 @@ export class Game {
       this.objectsToAdd = []
     }
 
-    if (this.isRunning) {
+    if (this._isRunning) {
       requestAnimationFrame(this.loop.bind(this))
     }
   }
 
   private assetLoadLoop() {
     if (this.assets.isReady) {
-      this.isRunning = true
+      this._isRunning = true
       this.loop()
       return
     }
@@ -112,14 +112,18 @@ export class Game {
   }
 
   stop(): void {
-    this.isRunning = false
+    this._isRunning = false
   }
 
   run(): void {
-    if (this.isRunning) {
+    if (this._isRunning) {
       return
     }
 
     this.assetLoadLoop()
+  }
+
+  get isRunning(): boolean {
+    return this._isRunning
   }
 }
