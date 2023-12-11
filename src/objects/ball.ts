@@ -159,8 +159,8 @@ export class Ball extends AbstractObject {
       this.game.assets.get(this.image)!,
       -this.radius,
       -this.radius,
-      this.radius * 2,
-      this.radius * 2,
+      this.radius * 2 - 2,
+      this.radius * 2 - 2,
     )
     this.game.ctx.restore()
   }

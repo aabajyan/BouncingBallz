@@ -23,7 +23,7 @@ game.canvas.addEventListener('mouseup', (e) => {
     x: e.clientX - rect.left,
     y: e.clientY - rect.top,
     radius: radius,
-    restitution: 0.7,
+    restitution: 0.5,
     mass: radius,
     image: images[Math.floor(Math.random() * images.length)],
   })
