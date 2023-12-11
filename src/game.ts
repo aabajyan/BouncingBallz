@@ -9,6 +9,9 @@ export class Game {
   public readonly ctx: CanvasRenderingContext2D
 
   public objects: AbstractObject[] = []
+  private objectsToAdd: AbstractObject[] = []
+  private objectsToRemove: AbstractObject[] = []
+
   private isRunning = false
 
   constructor(canvas: string) {
@@ -64,20 +67,31 @@ export class Game {
   ): T {
     const obj = new object(this)
     obj.onInit(...props)
-    this.objects.push(obj)
+    this.objectsToAdd.push(obj)
 
     return obj
   }
 
-  private loop() {
-    this.objects = this.objects.filter((object) => {
-      if (object.shouldDestroy) {
-        return false
-      }
+  destroy(object: AbstractObject): void {
+    this.objectsToRemove.push(object)
+  }
 
-      object.onUpdate(DELTA_TIME)
-      return true
-    })
+  private loop() {
+    for (let i = 0; i < this.objects.length; ++i) {
+      this.objects[i].onUpdate(DELTA_TIME)
+    }
+
+    if (this.objectsToRemove.length > 0) {
+      this.objects = this.objects.filter(
+        (obj) => !this.objectsToRemove.includes(obj),
+      )
+      this.objectsToRemove = []
+    }
+
+    if (this.objectsToAdd.length > 0) {
+      this.objects = this.objects.concat(this.objectsToAdd)
+      this.objectsToAdd = []
+    }
 
     if (this.isRunning) {
       requestAnimationFrame(this.loop.bind(this))
