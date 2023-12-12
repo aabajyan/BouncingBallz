@@ -1,3 +1,4 @@
+import { Vector2 } from '../vector2'
 import { AbstractObject } from './abstract-object'
 
 export const BALL_FRICTION = 0.008
@@ -17,8 +18,8 @@ export interface BallOptions {
 }
 
 export class Ball extends AbstractObject {
-  private position: Vector2 = { x: 0, y: 0 }
-  private velocity: Vector2 = { x: 0, y: 0 }
+  private position: Vector2 = new Vector2()
+  private velocity: Vector2 = new Vector2()
   private radius = 0
   private mass = 0
   private restitution = 0
@@ -53,12 +54,7 @@ export class Ball extends AbstractObject {
         continue
       }
 
-      // d = sqrt((x2-x1)^2 + (y2-y1)^2)
-      const distance = Math.sqrt(
-        (this.position.x - other.position.x) ** 2 +
-          (this.position.y - other.position.y) ** 2,
-      )
-
+      const distance = this.position.sub(other.position).magnitute()
       if (distance > this.radius + other.radius) {
         continue
       }
@@ -121,6 +117,7 @@ export class Ball extends AbstractObject {
       this.position.y = this.radius
     }
   }
+
   onUpdate(deltaTime: number): void {
     ++this.timer
     if (this.timer > 10000) {
