@@ -80,20 +80,22 @@ export class Game {
 
   private loop(now: number) {
     const deltatime = (now - this._lastTime) / 1000
-    for (let i = 0; i < this.objects.length; ++i) {
-      this.objects[i].onUpdate(deltatime)
-    }
+    if (document.hasFocus()) {
+      for (let i = 0; i < this.objects.length; ++i) {
+        this.objects[i].onUpdate(deltatime)
+      }
 
-    if (this.objectsToRemove.length > 0) {
-      this.objects = this.objects.filter(
-        (obj) => !this.objectsToRemove.includes(obj),
-      )
-      this.objectsToRemove = []
-    }
+      if (this.objectsToRemove.length > 0) {
+        this.objects = this.objects.filter(
+          (obj) => !this.objectsToRemove.includes(obj),
+        )
+        this.objectsToRemove = []
+      }
 
-    if (this.objectsToAdd.length > 0) {
-      this.objects = this.objects.concat(this.objectsToAdd)
-      this.objectsToAdd = []
+      if (this.objectsToAdd.length > 0) {
+        this.objects = this.objects.concat(this.objectsToAdd)
+        this.objectsToAdd = []
+      }
     }
 
     this._lastTime = now
