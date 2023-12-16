@@ -15,6 +15,7 @@ export interface BallOptions {
   restitution: number
   mass: number
   image: string
+  velocity: Vector2
 }
 
 export class Ball extends AbstractObject {
@@ -30,6 +31,7 @@ export class Ball extends AbstractObject {
   onInit(options: BallOptions) {
     this.position.x = options.x
     this.position.y = options.y
+    this.velocity = options.velocity
     this.mass = options.mass
     this.radius = options.radius
     this.restitution = -options.restitution
