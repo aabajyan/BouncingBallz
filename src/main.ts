@@ -15,20 +15,22 @@ game.add(Background)
 
 game.run()
 
+let lastBallPlacted = 0
 game.canvas.addEventListener('mouseup', (e) => {
-  if (!game.isRunning) {
+  const now = performance.now()
+  if (!game.isRunning || now - lastBallPlacted < 150) {
     return
   }
 
   const rect = game.canvas.getBoundingClientRect()
-  const radius = Math.random() * 20 + 10
 
+  lastBallPlacted = now
   game.add(Ball, {
     x: e.clientX - rect.left,
     y: e.clientY - rect.top,
-    radius: radius,
+    radius: 30,
     restitution: 0.5,
-    mass: radius,
+    mass: 30,
     image: images[Math.floor(Math.random() * images.length)],
   })
 })
