@@ -14,9 +14,9 @@ export class BallManager extends AbstractObject {
   private mousePosition: Vector2 = new Vector2()
 
   onInit(): void {
-    this.game.canvas.addEventListener('mousedown', (e) => this.onMouseDown(e))
+    this.game.canvas.addEventListener('mousedown', () => this.onMouseDown())
 
-    window.addEventListener('mouseup', (e) => this.onMouseUp(e))
+    window.addEventListener('mouseup', () => this.onMouseUp())
     window.addEventListener('mousemove', (e) => this.onMouseMove(e))
   }
 
@@ -40,7 +40,7 @@ export class BallManager extends AbstractObject {
     this.mousePosition.y = e.clientY - rect.top
   }
 
-  onMouseDown(e: MouseEvent): void {
+  onMouseDown(): void {
     if (this.isSpawningBall) {
       return
     }
@@ -55,7 +55,7 @@ export class BallManager extends AbstractObject {
     this.image = images[Math.floor(Math.random() * images.length)]
   }
 
-  onMouseUp(e: MouseEvent): void {
+  onMouseUp(): void {
     if (!this.isSpawningBall) {
       return
     }
