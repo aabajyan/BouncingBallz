@@ -8,6 +8,10 @@ This is a small game that simulates bouncing balls with as realistic physics and
 
 The purpose is to test my skills in the game development space, specifically in game physics. Even though physics is already implemented in most game engines, I believe it's important to learn how physics works under the hood.
 
+## What I learned?
+
+After a week of studying and working on this project, I've learned the basics of physics in games. While there's still a lot to learn (such as fully grasping concepts like aerodynamic drag), I believe it's good progress for that period of time.
+
 ## Setup
 
 ```sh
