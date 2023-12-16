@@ -113,16 +113,7 @@ export class Ball extends AbstractObject {
     }
   }
 
-  onUpdate(deltaTime: number): void {
-    ++this.timer
-    if (this.timer > 10000) {
-      this.destroy()
-      return
-    }
-
-    this.handleWallCollision()
-    this.handleCircleCollisions()
-
+  handleGravity(deltaTime: number) {
     const f = -0.5 * BALL_DRAG * BALL_DENSITY * this.area
     let fx =
       f * this.velocity.x ** 2 * (this.velocity.x / Math.abs(this.velocity.x))
@@ -142,12 +133,26 @@ export class Ball extends AbstractObject {
 
     this.velocity.x += ax * deltaTime
     this.velocity.y += ay * deltaTime
-    this.position.x += this.velocity.x * deltaTime * 100
-    this.position.y += this.velocity.y * deltaTime * 100
+    this.position.x += this.velocity.x * deltaTime * 4
+    this.position.y += this.velocity.y * deltaTime * 4
 
     // add friction to ball velocity x
     this.velocity.x -= this.velocity.x * BALL_FRICTION
-    this.rotation += this.velocity.x * 10
+    this.rotation += this.velocity.x * deltaTime * 4
+  }
+
+  onUpdate(deltaTime: number): void {
+    ++this.timer
+    if (this.timer > 10000) {
+      this.destroy()
+      return
+    }
+
+    for (let sub = 0; sub < 5; ++sub) {
+      this.handleGravity(deltaTime)
+      this.handleWallCollision()
+      this.handleCircleCollisions()
+    }
 
     this.game.ctx.save()
     this.game.ctx.translate(this.position.x, this.position.y)
