@@ -46,6 +46,13 @@ export class Ball extends AbstractObject {
     )
   }
 
+  isColliding(x: number, y: number, radius: number): boolean {
+    return (
+      Math.hypot(x - this.position.x, y - this.position.y) <
+      this.radius + radius
+    )
+  }
+
   handleCircleCollisions() {
     for (const other of this.game.objects) {
       if (this === other || !(other instanceof Ball)) {
