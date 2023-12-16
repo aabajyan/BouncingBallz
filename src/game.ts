@@ -1,8 +1,6 @@
 import { AssetLoader } from './assets'
 import { AbstractObject } from './objects/abstract-object'
 
-const DELTA_TIME = 1 / 60
-
 export class Game {
   public readonly width: number
   public readonly height: number
@@ -15,6 +13,7 @@ export class Game {
   private objectsToRemove: AbstractObject[] = []
 
   private _isRunning = false
+  private _lastTime = 0
 
   constructor(canvas: string) {
     const el = document.querySelector(canvas)
@@ -79,9 +78,10 @@ export class Game {
     this.objectsToRemove.push(object)
   }
 
-  private loop() {
+  private loop(now: number) {
+    const deltatime = (now - this._lastTime) / 1000
     for (let i = 0; i < this.objects.length; ++i) {
-      this.objects[i].onUpdate(DELTA_TIME)
+      this.objects[i].onUpdate(deltatime)
     }
 
     if (this.objectsToRemove.length > 0) {
@@ -96,6 +96,7 @@ export class Game {
       this.objectsToAdd = []
     }
 
+    this._lastTime = now
     if (this._isRunning) {
       requestAnimationFrame(this.loop.bind(this))
     }
@@ -104,7 +105,7 @@ export class Game {
   private assetLoadLoop() {
     if (this.assets.isReady) {
       this._isRunning = true
-      this.loop()
+      requestAnimationFrame(this.loop.bind(this))
       return
     }
 
