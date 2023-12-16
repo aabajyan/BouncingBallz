@@ -118,6 +118,12 @@ export class Game {
     this._isRunning = false
   }
 
+  resume(): void {
+    this._lastTime = performance.now()
+    this._isRunning = true
+    requestAnimationFrame(this.loop.bind(this))
+  }
+
   run(): void {
     if (this._isRunning) {
       return

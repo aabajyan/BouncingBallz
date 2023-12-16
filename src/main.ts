@@ -36,7 +36,7 @@ game.canvas.addEventListener('mouseup', (e) => {
 })
 
 document.querySelector('#play')!.addEventListener('click', () => {
-  game.run()
+  game.resume()
 })
 
 document.querySelector('#stop')!.addEventListener('click', () => {
