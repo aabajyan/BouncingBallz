@@ -6,8 +6,14 @@ export const BALL_MANAGER_RADIUS = 30
 
 const images = ['ball_black', 'ball_red', 'ball_white', 'ball_yellow']
 
+enum SpawningBallStatus {
+  NOT_SPAWNING = 0,
+  START_SPAWNING = 1,
+  SPAWNED = 2,
+}
+
 export class BallManager extends AbstractObject {
-  private isSpawningBall = false
+  private status: SpawningBallStatus = SpawningBallStatus.NOT_SPAWNING
   private x: number = 0
   private y: number = 0
   private image: string = ''
@@ -41,7 +47,7 @@ export class BallManager extends AbstractObject {
   }
 
   onMouseDown(): void {
-    if (this.isSpawningBall) {
+    if (this.status !== SpawningBallStatus.NOT_SPAWNING) {
       return
     }
 
@@ -49,36 +55,24 @@ export class BallManager extends AbstractObject {
       return
     }
 
-    this.isSpawningBall = true
+    this.status = SpawningBallStatus.START_SPAWNING
     this.x = this.mousePosition.x
     this.y = this.mousePosition.y
     this.image = images[Math.floor(Math.random() * images.length)]
   }
 
   onMouseUp(): void {
-    if (!this.isSpawningBall) {
+    if (this.status === SpawningBallStatus.NOT_SPAWNING) {
       return
     }
 
-    this.isSpawningBall = false
-    this.game.add(Ball, {
-      x: this.x,
-      y: this.y,
-      image: this.image,
-      radius: BALL_MANAGER_RADIUS,
-      restitution: 0.5,
-      mass: BALL_MANAGER_RADIUS,
-      velocity: new Vector2(
-        this.x - this.mousePosition.x,
-        this.y - this.mousePosition.y,
-      ),
-    })
+    this.status = SpawningBallStatus.SPAWNED
   }
 
   onUpdate(): void {
     this.game.clear('#195938')
 
-    if (this.isSpawningBall) {
+    if (this.status !== SpawningBallStatus.NOT_SPAWNING) {
       this.game.ctx.drawImage(
         this.game.assets.get(this.image)!,
         -BALL_MANAGER_RADIUS + this.x,
@@ -94,6 +88,22 @@ export class BallManager extends AbstractObject {
         'red',
         2,
       )
+
+      if (this.status === SpawningBallStatus.SPAWNED) {
+        this.game.add(Ball, {
+          x: this.x,
+          y: this.y,
+          image: this.image,
+          radius: BALL_MANAGER_RADIUS,
+          restitution: 0.5,
+          mass: BALL_MANAGER_RADIUS,
+          velocity: new Vector2(
+            this.x - this.mousePosition.x,
+            this.y - this.mousePosition.y,
+          ),
+        })
+        this.status = SpawningBallStatus.NOT_SPAWNING
+      }
     }
   }
 }
