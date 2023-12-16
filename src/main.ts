@@ -16,6 +16,8 @@ game.add(Background)
 game.run()
 
 let lastBallPlacted = 0
+let pausedFromButton = false
+
 game.canvas.addEventListener('mouseup', (e) => {
   const now = performance.now()
   if (!game.isRunning || now - lastBallPlacted < 150) {
@@ -35,12 +37,26 @@ game.canvas.addEventListener('mouseup', (e) => {
   })
 })
 
-document.querySelector('#play')!.addEventListener('click', () => {
-  game.resume()
+document.addEventListener('blur', () => {
+  if (game.isRunning) {
+    game.pause()
+  }
 })
 
-document.querySelector('#stop')!.addEventListener('click', () => {
-  game.stop()
+document.addEventListener('focus', () => {
+  if (!game.isRunning && !pausedFromButton) {
+    game.resume()
+  }
+})
+
+document.querySelector('#play')!.addEventListener('click', () => {
+  game.resume()
+  pausedFromButton = false
+})
+
+document.querySelector('#pause')!.addEventListener('click', () => {
+  game.pause()
+  pausedFromButton = true
 })
 
 document.querySelector('#clear')!.addEventListener('click', () => {
