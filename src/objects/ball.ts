@@ -26,7 +26,6 @@ export class Ball extends AbstractObject {
   private area = 0
   private rotation = 0
   private image = ''
-  private timer = 0
 
   onInit(options: BallOptions) {
     this.position.x = options.x
@@ -142,12 +141,6 @@ export class Ball extends AbstractObject {
   }
 
   onUpdate(deltaTime: number): void {
-    ++this.timer
-    if (this.timer > 10000) {
-      this.destroy()
-      return
-    }
-
     for (let sub = 0; sub < 5; ++sub) {
       this.handleGravity(deltaTime)
       this.handleWallCollision()
